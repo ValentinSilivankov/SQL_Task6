@@ -55,12 +55,16 @@ if __name__ == "__main__":
 
     if search == '1':
         req = str(input('Введите id издателя: '))
-        for q in session.query(Book, Shop, Sale).filter(Publisher.id == req).filter(Publisher.id == Book.id_publisher).filter(Book.id_publisher == Stock.id_book).filter(Stock.id_shop == Shop.id).filter(Stock.id == Sale.id_stock).all():
-            print(f'{q[0]} | {q[1]} | {q[2]}')
+        res = session.query(Book.title, Shop.name, Sale.price, Sale.count, Sale.date_sale).\
+        join(Publisher).join(Stock).join(Sale).join(Shop).filter(Publisher.id == req)
+        for book, shop, price, count, date in res:
+            print(f'{book: <30} | {shop: <10} | {price*count: <8} | {date}')
     elif search == '2':
         req = str(input('Введите имя издателя: '))
-        for q in session.query(Book, Shop, Sale).filter(Publisher.name == req).filter(Publisher.id == Book.id_publisher).filter(Book.id_publisher == Stock.id_book).filter(Stock.id_shop == Shop.id).filter(Stock.id == Sale.id_stock).all():
-            print(f'{q[0]} | {q[1]} | {q[2]}')
+        res = session.query(Book.title, Shop.name, Sale.price, Sale.count, Sale.date_sale).\
+        join(Publisher).join(Stock).join(Sale).join(Shop).filter(Publisher.name == req)
+        for book, shop, price, count, date in res:
+            print(f'{book: <30} | {shop: <10} | {price*count: <8} | {date}')
     else:
         print('Введены некорректные данные, либо издатель не существует')
 
